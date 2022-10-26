@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { ApiService } from '../api.service';
 
 @Component({
   selector: 'app-signin',
@@ -9,7 +11,7 @@ export class SigninComponent implements OnInit {
 
   email=""
   password=""
-  constructor() { }
+  constructor(private myrouter:Router,private myapi:ApiService) { }
 
   
 
@@ -19,6 +21,17 @@ export class SigninComponent implements OnInit {
       "password":this.password
     }
     console.log(data)
+    this.myapi.addLogin(data).subscribe(
+      (res:any)=>{
+        if (res.length>0){
+          localStorage.setItem("stored-name",res[0].name)
+          localStorage.setItem("id",res[0].id)
+          this.myrouter.navigate(["/todo"])
+        } else {
+          alert("Invalid Credentials")
+        }
+      }
+    )
     this.email=""
     this.password=""
     
